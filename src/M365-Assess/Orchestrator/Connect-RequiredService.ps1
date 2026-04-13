@@ -89,6 +89,8 @@ function Connect-RequiredService {
                 if ($suppressOutput) {
                     [Console]::SetOut($prevConsoleOut)
                     [Console]::SetError($prevConsoleError)
+                    $nullOut.Dispose()
+                    $nullErr.Dispose()
                 }
             }
 
