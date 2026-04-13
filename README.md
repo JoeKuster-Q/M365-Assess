@@ -12,8 +12,8 @@
 
 **Read-only Microsoft 365 security assessment for IT consultants and administrators**
 
-[![CI](https://github.com/Galvnyz/M365-Assess/actions/workflows/ci.yml/badge.svg)](https://github.com/Galvnyz/M365-Assess/actions/workflows/ci.yml)
-[![Coverage](https://img.shields.io/badge/coverage-check%20CI-informational)](https://github.com/Galvnyz/M365-Assess/actions/workflows/ci.yml)
+[![CI](https://github.com/JoeKuster-Q/M365-Assess/actions/workflows/ci.yml/badge.svg)](https://github.com/JoeKuster-Q/M365-Assess/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-check%20CI-informational)](https://github.com/JoeKuster-Q/M365-Assess/actions/workflows/ci.yml)
 [![PowerShell 7.x](https://img.shields.io/badge/PowerShell-7.x-blue?logo=powershell&logoColor=white)](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows)
 [![Read-Only](https://img.shields.io/badge/Operations-Read--Only-brightgreen)](.)
 [![Version](https://img.shields.io/badge/version-1.9.0-blue)](.)
@@ -38,7 +38,7 @@ Run a single command to produce CSV reports, a branded HTML assessment report, a
 ## Installation
 
 ```powershell
-git clone https://github.com/Galvnyz/M365-Assess.git
+git clone https://github.com/JoeKuster-Q/M365-Assess.git
 cd M365-Assess
 Install-Module Microsoft.Graph -Scope CurrentUser
 Install-Module ExchangeOnlineManagement -Scope CurrentUser
@@ -74,7 +74,7 @@ Results land in a timestamped folder with CSV data + HTML report + XLSX complian
 | **macOS** | Experimental |
 | **Linux** | Experimental |
 
-macOS and Linux are supported by PowerShell 7 but have not been fully tested. If you run into issues, please [open an issue](https://github.com/Galvnyz/M365-Assess/issues/new) with your OS version, PowerShell version, terminal app, and the assessment log file.
+macOS and Linux are supported by PowerShell 7 but have not been fully tested. If you run into issues, please [open an issue](https://github.com/JoeKuster-Q/M365-Assess/issues/new) with your OS version, PowerShell version, terminal app, and the assessment log file.
 
 ## Interactive Console
 

@@ -38,7 +38,7 @@ Install-Module ImportExcel -Scope CurrentUser
 ## 3. Get the Module
 
 ```powershell
-git clone https://github.com/Galvnyz/M365-Assess.git
+git clone https://github.com/JoeKuster-Q/M365-Assess.git
 cd M365-Assess
 Import-Module ./src/M365-Assess
 ```

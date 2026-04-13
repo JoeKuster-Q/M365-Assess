@@ -13,20 +13,12 @@
     # Minimum PowerShell version
     PowerShellVersion = '7.0'
 
-    # Required modules (must be installed before running)
+    # Dependencies are checked at runtime by the orchestrator (Test-ModuleCompatibility)
+    # so that Import-Module succeeds even when Graph SDK is not yet installed.
     # Graph SDK 2.36.0+ ships Microsoft.Identity.Client (MSAL) 4.82.1 with improved
     # assembly resolution, resolving prior MSAL conflicts with EXO 3.8.0+.
-    # EXO excluded from RequiredModules because it is only needed for Email/Purview sections.
-    RequiredModules   = @(
-        @{ ModuleName = 'Microsoft.Graph.Authentication';               ModuleVersion = '2.36.0' }
-        @{ ModuleName = 'Microsoft.Graph.Applications';                 ModuleVersion = '2.36.0' }
-        @{ ModuleName = 'Microsoft.Graph.DeviceManagement';             ModuleVersion = '2.36.0' }
-        @{ ModuleName = 'Microsoft.Graph.Identity.DirectoryManagement'; ModuleVersion = '2.36.0' }
-        @{ ModuleName = 'Microsoft.Graph.Identity.SignIns';             ModuleVersion = '2.36.0' }
-        @{ ModuleName = 'Microsoft.Graph.Reports';                      ModuleVersion = '2.36.0' }
-        @{ ModuleName = 'Microsoft.Graph.Security';                     ModuleVersion = '2.36.0' }
-        @{ ModuleName = 'Microsoft.Graph.Users';                        ModuleVersion = '2.36.0' }
-    )
+    # EXO excluded because it is only needed for Email/Purview sections.
+    RequiredModules   = @()
 
     # Functions to export from this module
     FunctionsToExport = @(
@@ -193,9 +185,9 @@
             Tags         = @('Microsoft365', 'M365', 'Security', 'Assessment', 'Compliance', 'Audit',
                              'EntraID', 'Exchange', 'Intune', 'Defender', 'SharePoint', 'Teams',
                              'PowerBI', 'CIS', 'NIST', 'SOC2', 'HIPAA', 'ZeroTrust', 'SecurityBaseline')
-            IconUri      = 'https://raw.githubusercontent.com/Galvnyz/M365-Assess/main/src/M365-Assess/assets/m365-assess-logo.png'
-            LicenseUri   = 'https://github.com/Galvnyz/M365-Assess/blob/main/LICENSE'
-            ProjectUri   = 'https://github.com/Galvnyz/M365-Assess'
+            IconUri      = 'https://raw.githubusercontent.com/JoeKuster-Q/M365-Assess/main/src/M365-Assess/assets/m365-assess-logo.png'
+            LicenseUri   = 'https://github.com/JoeKuster-Q/M365-Assess/blob/main/LICENSE'
+            ProjectUri   = 'https://github.com/JoeKuster-Q/M365-Assess'
             ReleaseNotes = 'v1.9.0 - Fix .onmicrosoft.com false-positive DNS failures; QuickScan now auto-applies triage report format (no cover page, exec summary, or compliance matrix)'
         }
     }

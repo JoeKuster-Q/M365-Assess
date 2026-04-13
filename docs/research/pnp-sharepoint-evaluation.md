@@ -1,6 +1,6 @@
 # PnP.PowerShell Evaluation for SharePoint/OneDrive Collectors
 
-**Issue:** [#255](https://github.com/Galvnyz/M365-Assess/issues/255)
+**Issue:** [#255](https://github.com/JoeKuster-Q/M365-Assess/issues/255)
 **Date:** 2026-04-01 (validated 2026-04-02)
 **Status:** Research Complete -- DEFER (no-go)
 

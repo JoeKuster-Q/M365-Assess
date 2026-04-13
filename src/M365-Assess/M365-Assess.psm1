@@ -1,5 +1,33 @@
 # M365-Assess module loader
 
+# ------------------------------------------------------------------
+# Runtime dependency check
+# The manifest no longer lists RequiredModules so that Import-Module
+# succeeds even when Graph SDK is not yet installed.  We warn here
+# and the orchestrator (Test-ModuleCompatibility) enforces the full
+# check before any assessment run.
+# ------------------------------------------------------------------
+$_requiredGraphModules = @(
+    'Microsoft.Graph.Authentication'
+    'Microsoft.Graph.Applications'
+    'Microsoft.Graph.DeviceManagement'
+    'Microsoft.Graph.Identity.DirectoryManagement'
+    'Microsoft.Graph.Identity.SignIns'
+    'Microsoft.Graph.Reports'
+    'Microsoft.Graph.Security'
+    'Microsoft.Graph.Users'
+)
+$_missing = @()
+foreach ($_mod in $_requiredGraphModules) {
+    if (-not (Get-Module -Name $_mod -ListAvailable -ErrorAction SilentlyContinue)) {
+        $_missing += $_mod
+    }
+}
+if ($_missing.Count -gt 0) {
+    Write-Warning ("M365-Assess: The following required modules are not installed: {0}. Run 'Install-Module Microsoft.Graph -Scope CurrentUser' before starting an assessment." -f ($_missing -join ', '))
+}
+Remove-Variable -Name _requiredGraphModules, _missing, _mod -ErrorAction SilentlyContinue
+
 # Dot-source orchestrator internal modules
 Get-ChildItem -Path "$PSScriptRoot\Orchestrator\*.ps1" | ForEach-Object { . $_.FullName }
 
