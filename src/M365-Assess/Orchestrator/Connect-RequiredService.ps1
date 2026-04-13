@@ -62,14 +62,21 @@ function Connect-RequiredService {
 
             # Suppress noisy output during connection (skip when device code
             # is active — the user needs to see the code and URL).
-            # Use StreamWriter wrapping Stream.Null instead of TextWriter.Null.
-            # The ExchangeOnlineManagement module's .NET internals expect
-            # Console.Out to be a StreamWriter; TextWriter.Null (a NullTextWriter)
-            # causes a NullReferenceException when the module casts it.
-            $suppressOutput = -not $UseDeviceCode
-            $prevConsoleOut = [Console]::Out
-            $prevConsoleError = [Console]::Error
-            if ($suppressOutput) {
+            #
+            # Console.Out/Error redirection is skipped for ExchangeOnline and
+            # Purview because Console.SetOut() wraps writers in SyncTextWriter.
+            # The ExchangeOnlineManagement module's .NET internals cast
+            # Console.Out to StreamWriter; the SyncTextWriter wrapper causes
+            # that cast to return null, producing a NullReferenceException.
+            # PowerShell stream redirection (2>$null 6>$null) still suppresses
+            # most connection noise for those services.
+            $suppressStreams = -not $UseDeviceCode
+            $suppressConsole = $suppressStreams -and $svc -notin @('ExchangeOnline', 'Purview')
+            $prevConsoleOut = $null
+            $prevConsoleError = $null
+            if ($suppressConsole) {
+                $prevConsoleOut = [Console]::Out
+                $prevConsoleError = [Console]::Error
                 $nullOut = [System.IO.StreamWriter]::new([System.IO.Stream]::Null)
                 $nullOut.AutoFlush = $true
                 $nullErr = [System.IO.StreamWriter]::new([System.IO.Stream]::Null)
@@ -78,7 +85,7 @@ function Connect-RequiredService {
                 [Console]::SetError($nullErr)
             }
             try {
-                if ($suppressOutput) {
+                if ($suppressStreams) {
                     & $connectServicePath @connectParams 2>$null 6>$null
                 }
                 else {
@@ -86,7 +93,7 @@ function Connect-RequiredService {
                 }
             }
             finally {
-                if ($suppressOutput) {
+                if ($suppressConsole) {
                     [Console]::SetOut($prevConsoleOut)
                     [Console]::SetError($prevConsoleError)
                     $nullOut.Dispose()
