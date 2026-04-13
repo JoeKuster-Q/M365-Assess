@@ -283,7 +283,7 @@ If you need Power BI data but run most sections non-interactively, run two passe
 
 - Check the [Quickstart Guide](QUICKSTART.md) for initial setup steps
 - Review the [README](../README.md) for supported environments and prerequisites
-- Open an issue at [github.com/Galvnyz/M365-Assess/issues](https://github.com/Galvnyz/M365-Assess/issues) with:
+- Open an issue at [github.com/JoeKuster-Q/M365-Assess/issues](https://github.com/JoeKuster-Q/M365-Assess/issues) with:
   - The full error message
   - Your PowerShell version (`$PSVersionTable.PSVersion`)
   - Your module versions (`Get-Module Microsoft.Graph*, ExchangeOnlineManagement -ListAvailable`)
