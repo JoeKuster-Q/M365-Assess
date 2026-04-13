@@ -70,26 +70,30 @@ This opens an interactive consent prompt for all scopes the assessment requires.
 
 ### Cause
 
-ExchangeOnlineManagement version 3.8.0 and later ships a newer MSAL (`Microsoft.Identity.Client`) assembly that conflicts with the version bundled in the Microsoft.Graph SDK modules. PowerShell cannot load two different versions of the same assembly in one session.
+Older versions of the Microsoft.Graph SDK (< 2.36.0) shipped a version of `Microsoft.Identity.Client` (MSAL) that conflicted with the version bundled in ExchangeOnlineManagement 3.8.0+. PowerShell cannot load two different versions of the same assembly in one session.
 
 ### Resolution
 
-Downgrade ExchangeOnlineManagement to the last compatible version:
+**Upgrade to Graph SDK 2.36.0 or later** (recommended):
 
 ```powershell
-# Remove the conflicting version
-Uninstall-Module ExchangeOnlineManagement -AllVersions -Force
+# Remove older Graph SDK versions
+Get-Module Microsoft.Graph* -ListAvailable |
+    ForEach-Object { Uninstall-Module $_.Name -AllVersions -Force -ErrorAction SilentlyContinue }
 
-# Install the compatible version
-Install-Module ExchangeOnlineManagement -RequiredVersion 3.7.1 -Force
+# Install latest Graph SDK (2.36.0+ resolves the MSAL conflict)
+Install-Module Microsoft.Graph -Force
 ```
 
-After downgrading, **close and reopen your PowerShell session** before running the assessment. Assemblies loaded in the current session persist until the process exits.
+Graph SDK 2.36.0 updated `Microsoft.Identity.Client` to 4.82.1 and improved its assembly resolution, eliminating conflicts with EXO 3.8.0+ in the same session.
+
+After upgrading, **close and reopen your PowerShell session** before running the assessment. Assemblies loaded in the current session persist until the process exits.
 
 **Verify the installed version:**
 
 ```powershell
-Get-Module ExchangeOnlineManagement -ListAvailable | Select-Object Name, Version
+Get-Module Microsoft.Graph.Authentication -ListAvailable | Select-Object Name, Version
+# Version should be 2.36.0 or later
 ```
 
 ---
@@ -208,7 +212,7 @@ $modules = @(
     @{ Name = 'Microsoft.Graph.Identity.Governance' }
     @{ Name = 'Microsoft.Graph.Security' }
     @{ Name = 'Microsoft.Graph.Applications' }
-    @{ Name = 'ExchangeOnlineManagement'; RequiredVersion = '3.7.1' }
+    @{ Name = 'ExchangeOnlineManagement' }
 )
 
 foreach ($mod in $modules) {

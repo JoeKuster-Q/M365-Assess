@@ -21,7 +21,7 @@ Describe 'Test-ModuleCompatibility' {
     Context 'when all required modules are installed and compatible' {
         BeforeAll {
             Mock Get-Module {
-                [PSCustomObject]@{ Version = [version]'2.35.0'; ModuleBase = 'C:\fake\graph' }
+                [PSCustomObject]@{ Version = [version]'2.36.0'; ModuleBase = 'C:\fake\graph' }
             } -ParameterFilter { $Name -eq 'Microsoft.Graph.Authentication' }
 
             Mock Get-Module {
@@ -72,7 +72,7 @@ Describe 'Test-ModuleCompatibility' {
     Context 'when EXO module is missing (NonInteractive)' {
         BeforeAll {
             Mock Get-Module {
-                [PSCustomObject]@{ Version = [version]'2.35.0'; ModuleBase = 'C:\fake\graph' }
+                [PSCustomObject]@{ Version = [version]'2.36.0'; ModuleBase = 'C:\fake\graph' }
             } -ParameterFilter { $Name -eq 'Microsoft.Graph.Authentication' }
             Mock Get-Module { $null } -ParameterFilter { $Name -eq 'ExchangeOnlineManagement' }
             Mock Get-Module { $null } -ParameterFilter { $Name -eq 'MicrosoftPowerBIMgmt' }
@@ -87,30 +87,30 @@ Describe 'Test-ModuleCompatibility' {
         }
     }
 
-    Context 'when EXO version has MSAL conflict (>= 3.8.0, NonInteractive)' {
+    Context 'when EXO version is >= 3.8.0 (no longer a conflict with Graph SDK 2.36.0+)' {
         BeforeAll {
             Mock Get-Module {
-                [PSCustomObject]@{ Version = [version]'2.35.0'; ModuleBase = 'C:\fake\graph' }
+                [PSCustomObject]@{ Version = [version]'2.36.0'; ModuleBase = 'C:\fake\graph' }
             } -ParameterFilter { $Name -eq 'Microsoft.Graph.Authentication' }
             Mock Get-Module {
                 [PSCustomObject]@{ Version = [version]'3.8.0'; ModuleBase = 'C:\fake\exo' }
             } -ParameterFilter { $Name -eq 'ExchangeOnlineManagement' }
             Mock Get-Module { $null } -ParameterFilter { $Name -eq 'MicrosoftPowerBIMgmt' }
-            Mock Get-Module { $null } -ParameterFilter { $Name -eq 'ImportExcel' }
-            Mock Install-Module { }
-            Mock Write-Error { }
+            Mock Get-Module {
+                [PSCustomObject]@{ Version = [version]'7.8.0' }
+            } -ParameterFilter { $Name -eq 'ImportExcel' }
         }
 
-        It 'should return nothing (fatal MSAL conflict)' {
+        It 'should pass (MSAL conflict resolved in Graph SDK 2.36.0+)' {
             $result = Test-ModuleCompatibility -Section @('Email') -SectionServiceMap $sectionServiceMap -NonInteractive
-            $result | Should -BeNullOrEmpty
+            $result.Passed | Should -Be $true
         }
     }
 
     Context 'when only Graph-using sections are selected and EXO is not needed' {
         BeforeAll {
             Mock Get-Module {
-                [PSCustomObject]@{ Version = [version]'2.35.0'; ModuleBase = 'C:\fake\graph' }
+                [PSCustomObject]@{ Version = [version]'2.36.0'; ModuleBase = 'C:\fake\graph' }
             } -ParameterFilter { $Name -eq 'Microsoft.Graph.Authentication' }
             Mock Get-Module { $null } -ParameterFilter { $Name -eq 'ExchangeOnlineManagement' }
             Mock Get-Module { $null } -ParameterFilter { $Name -eq 'MicrosoftPowerBIMgmt' }
@@ -128,7 +128,7 @@ Describe 'Test-ModuleCompatibility' {
     Context 'when recommended modules are missing (NonInteractive auto-install)' {
         BeforeAll {
             Mock Get-Module {
-                [PSCustomObject]@{ Version = [version]'2.35.0'; ModuleBase = 'C:\fake\graph' }
+                [PSCustomObject]@{ Version = [version]'2.36.0'; ModuleBase = 'C:\fake\graph' }
             } -ParameterFilter { $Name -eq 'Microsoft.Graph.Authentication' }
             Mock Get-Module { $null } -ParameterFilter { $Name -eq 'ExchangeOnlineManagement' }
             Mock Get-Module { $null } -ParameterFilter { $Name -eq 'MicrosoftPowerBIMgmt' }

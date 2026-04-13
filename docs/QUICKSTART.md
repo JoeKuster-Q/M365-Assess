@@ -27,13 +27,13 @@ Open **pwsh** (not the old `powershell.exe`) and install the assessment dependen
 ```powershell
 # Required
 Install-Module Microsoft.Graph -Scope CurrentUser
-Install-Module ExchangeOnlineManagement -RequiredVersion 3.7.1 -Scope CurrentUser
+Install-Module ExchangeOnlineManagement -Scope CurrentUser
 
 # Optional (enables XLSX compliance matrix export)
 Install-Module ImportExcel -Scope CurrentUser
 ```
 
-> **Why EXO 3.7.1 specifically?** Versions 3.8.0+ have an MSAL library conflict with the Microsoft Graph SDK. The assessment's pre-flight check will detect and offer to fix this automatically.
+> **Note:** Graph SDK 2.36.0+ includes updated MSAL (Microsoft.Identity.Client 4.82.1) with improved assembly resolution. EXO version pinning is no longer required.
 
 ## 3. Get the Module
 
@@ -87,8 +87,8 @@ Open the HTML report in any browser to review findings.
 | Requirement | Minimum |
 |-------------|---------|
 | PowerShell | 7.0+ |
-| Microsoft.Graph SDK | 2.25.0+ |
-| ExchangeOnlineManagement | 3.7.1 (not 3.8+) |
+| Microsoft.Graph SDK | 2.36.0+ |
+| ExchangeOnlineManagement | 3.5.0+ |
 | Entra ID role | Global Reader (read-only) |
 | Network | Outbound HTTPS to `graph.microsoft.com`, `outlook.office365.com` |
 

@@ -58,7 +58,7 @@ graph TD
     subgraph ChildProcess["Child Process (isolated pwsh 7.x)"]
         PBIConn["Connect-PowerBIServiceAccount"]
         PBICollector["PowerBI Security Config"]
-        PBIReason["Reason: MSAL assembly conflict<br/>between MicrosoftPowerBIMgmt and<br/>Microsoft.Graph SDK 2.x"]
+        PBIReason["Reason: MSAL assembly version mismatch<br/>between MicrosoftPowerBIMgmt (4.64) and<br/>Microsoft.Graph SDK 2.36.0+ (4.82.1)"]
 
         PBIConn --> PBICollector
         PBIConn --- PBIReason

@@ -13,19 +13,19 @@
 
 | Module | Minimum | Tested | Notes |
 |--------|---------|--------|-------|
-| Microsoft.Graph.Authentication | 2.25.0 | 2.35.0 | Core auth module -- install first |
-| Microsoft.Graph.Identity.DirectoryManagement | 2.25.0 | 2.35.0 | Entra ID roles, policies |
-| Microsoft.Graph.Identity.SignIns | 2.25.0 | 2.35.0 | Auth methods, CA policies |
+| Microsoft.Graph.Authentication | 2.36.0 | 2.36.0 | Core auth module -- install first; ships MSAL 4.82.1 |
+| Microsoft.Graph.Identity.DirectoryManagement | 2.36.0 | 2.36.0 | Entra ID roles, policies |
+| Microsoft.Graph.Identity.SignIns | 2.36.0 | 2.36.0 | Auth methods, CA policies |
 
 Graph submodules (e.g., `Microsoft.Graph.Users`, `Microsoft.Graph.Groups`) are loaded on demand by collectors via `Invoke-MgGraphRequest`. Installing `Microsoft.Graph.Authentication` is sufficient -- submodule cmdlets are not used directly.
 
 ### Exchange Online Management
 
-| Module | Minimum | Maximum | Tested | Notes |
-|--------|---------|---------|--------|-------|
-| ExchangeOnlineManagement | 3.5.0 | 3.7.x | 3.7.1 | **Do not install 3.8.0+** |
+| Module | Minimum | Tested | Notes |
+|--------|---------|--------|-------|
+| ExchangeOnlineManagement | 3.5.0 | 3.7.1 | Any version 3.5.0+ works with Graph SDK 2.36.0+ |
 
-**Why the ceiling?** EXO 3.8.0 ships a version of `Microsoft.Identity.Client` (MSAL) that conflicts with Graph SDK 2.x, causing silent auth failures. The orchestrator blocks EXO >= 3.8.0 at startup.
+> **MSAL conflict resolved:** Graph SDK 2.36.0 updated `Microsoft.Identity.Client` to 4.82.1 with improved assembly resolution, eliminating the prior conflict with EXO 3.8.0+. The EXO version ceiling has been removed.
 
 ### Optional Modules
 
@@ -42,8 +42,8 @@ Graph submodules (e.g., `Microsoft.Graph.Users`, `Microsoft.Graph.Groups`) are l
 # Graph SDK (installs all submodules)
 Install-Module Microsoft.Graph -Scope CurrentUser
 
-# Exchange Online (pinned to compatible version)
-Install-Module ExchangeOnlineManagement -RequiredVersion 3.7.1 -Scope CurrentUser
+# Exchange Online
+Install-Module ExchangeOnlineManagement -Scope CurrentUser
 
 # Verify installation
 Get-Module -ListAvailable Microsoft.Graph.Authentication, ExchangeOnlineManagement |
@@ -58,6 +58,6 @@ The orchestrator's built-in module helper detects missing or incompatible module
 
 | Combination | Symptom | Fix |
 |-------------|---------|-----|
-| EXO >= 3.8.0 + Graph SDK 2.x | Silent auth failures, `msalruntime.dll` not found | Downgrade EXO to 3.7.1 |
+| EXO 3.8.0+ with Graph SDK < 2.36.0 | Silent auth failures, `msalruntime.dll` not found | Upgrade Graph SDK to 2.36.0+ |
 | PowerShell 5.1 | Module load failures | Use PowerShell 7.0+ |
 | Graph SDK 1.x | Cmdlet name changes | Upgrade to Graph SDK 2.x |
