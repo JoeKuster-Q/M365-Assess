@@ -846,7 +846,7 @@ foreach ($sectionName in $Section) {
 
             # Child-process collectors (e.g., PowerBI) run in an isolated pwsh
             # process to avoid .NET assembly version conflicts.  The PowerBI module
-            # ships Microsoft.Identity.Client 4.64 while Microsoft.Graph loads 4.78;
+            # ships Microsoft.Identity.Client 4.64 while Microsoft.Graph 2.36.0+ loads 4.82.1;
             # a child process gets its own AppDomain and avoids the clash.
             if ($collector.ContainsKey('IsChildProcess') -and $collector.IsChildProcess) {
                 Write-Host "    Running in isolated process (assembly compatibility)..." -ForegroundColor Gray

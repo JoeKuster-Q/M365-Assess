@@ -29,10 +29,6 @@ Describe 'Module repair detection' {
         It 'Should include RequiredVersion field in repair actions' {
             $src | Should -Match 'RequiredVersion'
         }
-
-        It 'Should set EXO RequiredVersion to 3.7.1' {
-            $src | Should -Match "RequiredVersion.*=.*'3\.7\.1'"
-        }
     }
 
     Context 'NonInteractive parameter' {
@@ -48,10 +44,6 @@ Describe 'Module repair detection' {
     Context 'Tier structure' {
         It 'Should define Install tier' {
             $src | Should -Match "Tier\s*=\s*'Install'"
-        }
-
-        It 'Should define Downgrade tier' {
-            $src | Should -Match "Tier\s*=\s*'Downgrade'"
         }
 
         It 'Should define FileCopy tier' {
@@ -83,10 +75,6 @@ Describe 'Module repair flow' {
     Context 'Interactive repair' {
         It 'Should prompt for Tier 1 installs' {
             $src | Should -Match 'Install missing modules to CurrentUser scope'
-        }
-
-        It 'Should prompt separately for EXO downgrade' {
-            $src | Should -Match 'Proceed with EXO downgrade'
         }
 
         It 'Should call Install-Module directly with splatted params' {

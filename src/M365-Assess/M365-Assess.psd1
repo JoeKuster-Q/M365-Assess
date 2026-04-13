@@ -14,19 +14,18 @@
     PowerShellVersion = '7.0'
 
     # Required modules (must be installed before running)
-    # Known compatible: Graph SDK 2.25+ with EXO 3.7.x
-    # EXO 3.8.0+ has MSAL conflicts with Graph SDK 2.x -- do not use
-    # EXO excluded from RequiredModules because ModuleVersion only supports minimum,
-    # and we need a ceiling (< 3.8.0). The orchestrator handles EXO gating at runtime.
+    # Graph SDK 2.36.0+ ships Microsoft.Identity.Client (MSAL) 4.82.1 with improved
+    # assembly resolution, resolving prior MSAL conflicts with EXO 3.8.0+.
+    # EXO excluded from RequiredModules because it is only needed for Email/Purview sections.
     RequiredModules   = @(
-        @{ ModuleName = 'Microsoft.Graph.Authentication';               ModuleVersion = '2.25.0' }
-        @{ ModuleName = 'Microsoft.Graph.Applications';                 ModuleVersion = '2.25.0' }
-        @{ ModuleName = 'Microsoft.Graph.DeviceManagement';             ModuleVersion = '2.25.0' }
-        @{ ModuleName = 'Microsoft.Graph.Identity.DirectoryManagement'; ModuleVersion = '2.25.0' }
-        @{ ModuleName = 'Microsoft.Graph.Identity.SignIns';             ModuleVersion = '2.25.0' }
-        @{ ModuleName = 'Microsoft.Graph.Reports';                      ModuleVersion = '2.25.0' }
-        @{ ModuleName = 'Microsoft.Graph.Security';                     ModuleVersion = '2.25.0' }
-        @{ ModuleName = 'Microsoft.Graph.Users';                        ModuleVersion = '2.25.0' }
+        @{ ModuleName = 'Microsoft.Graph.Authentication';               ModuleVersion = '2.36.0' }
+        @{ ModuleName = 'Microsoft.Graph.Applications';                 ModuleVersion = '2.36.0' }
+        @{ ModuleName = 'Microsoft.Graph.DeviceManagement';             ModuleVersion = '2.36.0' }
+        @{ ModuleName = 'Microsoft.Graph.Identity.DirectoryManagement'; ModuleVersion = '2.36.0' }
+        @{ ModuleName = 'Microsoft.Graph.Identity.SignIns';             ModuleVersion = '2.36.0' }
+        @{ ModuleName = 'Microsoft.Graph.Reports';                      ModuleVersion = '2.36.0' }
+        @{ ModuleName = 'Microsoft.Graph.Security';                     ModuleVersion = '2.36.0' }
+        @{ ModuleName = 'Microsoft.Graph.Users';                        ModuleVersion = '2.36.0' }
     )
 
     # Functions to export from this module
