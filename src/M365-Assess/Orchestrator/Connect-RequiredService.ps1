@@ -72,8 +72,6 @@ function Connect-RequiredService {
             # most connection noise for those services.
             $suppressStreams = -not $UseDeviceCode
             $suppressConsole = $suppressStreams -and $svc -notin @('ExchangeOnline', 'Purview')
-            $prevConsoleOut = $null
-            $prevConsoleError = $null
             if ($suppressConsole) {
                 $prevConsoleOut = [Console]::Out
                 $prevConsoleError = [Console]::Error
