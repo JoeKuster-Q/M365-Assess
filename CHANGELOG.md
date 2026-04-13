@@ -6,6 +6,7 @@ All notable changes to M365 Assess are documented here. This project uses [Conve
 
 ### Changed
 - **Graph SDK minimum raised to 2.36.0** -- Graph SDK 2.36.0 ships `Microsoft.Identity.Client` (MSAL) 4.82.1 with improved assembly resolution, eliminating the prior MSAL conflict with ExchangeOnlineManagement 3.8.0+. The EXO version ceiling (< 3.8.0) and downgrade tier have been removed. EXO is no longer pinned to 3.7.1.
+- **PSGallery references removed** -- Installation instructions now use source clone only. The PSGallery publish workflow, readiness tests, and related documentation have been removed.
 
 ## [1.9.0] - 2026-04-07
 

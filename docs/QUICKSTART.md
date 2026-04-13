@@ -37,16 +37,6 @@ Install-Module ImportExcel -Scope CurrentUser
 
 ## 3. Get the Module
 
-### Option A: PSGallery (recommended)
-
-```powershell
-Install-Module M365-Assess -Scope CurrentUser
-```
-
-Dependencies (Graph SDK, etc.) are declared in the manifest and installed automatically.
-
-### Option B: Clone from source
-
 ```powershell
 git clone https://github.com/Galvnyz/M365-Assess.git
 cd M365-Assess
@@ -95,7 +85,7 @@ Open the HTML report in any browser to review findings.
 ## Troubleshooting
 
 **"The term 'Invoke-M365Assessment' is not recognized"**
-You need to import the module first: `Import-Module M365-Assess` (PSGallery) or `Import-Module ./src/M365-Assess` (source).
+You need to import the module first: `Import-Module ./src/M365-Assess`.
 
 **Browser does not open for authentication**
 Use device code flow: `Invoke-M365Assessment -TenantId 'contoso.onmicrosoft.com' -UseDeviceCode`
