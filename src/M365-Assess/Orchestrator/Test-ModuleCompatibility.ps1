@@ -236,11 +236,11 @@ function Test-ModuleCompatibility {
                     $requiredIssues = @($requiredIssues | Where-Object { $_ -ne $action })
                 }
                 catch {
-                    $nestedDir = Split-Path -Path $action.SourcePath -Parent
-                    if ($nestedDir -and ($env:PATH -split [IO.Path]::PathSeparator) -notcontains $nestedDir) {
-                        $env:PATH = $nestedDir + [IO.Path]::PathSeparator + $env:PATH
-                    }
                     if (Test-Path -Path $action.SourcePath) {
+                        $nestedDir = Split-Path -Path $action.SourcePath -Parent
+                        if ($nestedDir -and ($env:PATH -split [IO.Path]::PathSeparator) -notcontains $nestedDir) {
+                            $env:PATH = $nestedDir + [IO.Path]::PathSeparator + $env:PATH
+                        }
                         Write-AssessmentLog -Level INFO -Message "Added msalruntime.dll directory to PATH (copy needs elevation)"
                         $requiredIssues = @($requiredIssues | Where-Object { $_ -ne $action })
                     }
@@ -318,11 +318,11 @@ function Test-ModuleCompatibility {
                     # Copy failed (typically access denied for system-scope installs).
                     # Fall back to adding the nested DLL directory to PATH so the
                     # runtime loader can find msalruntime.dll without a copy.
-                    $nestedDir = Split-Path -Path $action.SourcePath -Parent
-                    if ($nestedDir -and ($env:PATH -split [IO.Path]::PathSeparator) -notcontains $nestedDir) {
-                        $env:PATH = $nestedDir + [IO.Path]::PathSeparator + $env:PATH
-                    }
                     if (Test-Path -Path $action.SourcePath) {
+                        $nestedDir = Split-Path -Path $action.SourcePath -Parent
+                        if ($nestedDir -and ($env:PATH -split [IO.Path]::PathSeparator) -notcontains $nestedDir) {
+                            $env:PATH = $nestedDir + [IO.Path]::PathSeparator + $env:PATH
+                        }
                         Write-Host "    Γ£ô Added msalruntime.dll directory to PATH (copy needs elevation)" -ForegroundColor Green
                     }
                     else {
@@ -520,7 +520,8 @@ function Test-ModuleCompatibility {
                 if (-not (Test-Path -Path $msalDllDirect) -and (Test-Path -Path $msalDllNested)) {
                     # Check whether the PATH fallback already resolved this
                     $nestedDir = Split-Path -Path $msalDllNested -Parent
-                    if (($env:PATH -split [IO.Path]::PathSeparator) -notcontains $nestedDir) {
+                    $pathDirs = $env:PATH -split [IO.Path]::PathSeparator
+                    if (-not ($pathDirs -contains $nestedDir)) {
                         $stillBroken += "Copy-Item '$msalDllNested' '$msalDllDirect'"
                     }
 
