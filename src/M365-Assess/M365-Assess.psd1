@@ -187,7 +187,7 @@
         'assets\sku-friendly-names.csv'
     )
 
-    # Private data / PSData for PowerShell Gallery
+    # Private data / PSData metadata
     PrivateData       = @{
         PSData = @{
             Tags         = @('Microsoft365', 'M365', 'Security', 'Assessment', 'Compliance', 'Audit',

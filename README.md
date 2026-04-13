@@ -37,22 +37,11 @@ Run a single command to produce CSV reports, a branded HTML assessment report, a
 
 ## Installation
 
-### From PSGallery (recommended)
-
-```powershell
-Install-Module M365-Assess -Scope CurrentUser
-Invoke-M365Assessment -TenantId 'contoso.onmicrosoft.com'
-```
-
-Graph and EXO dependencies are declared in the manifest and installed automatically.
-
-### From Source
-
 ```powershell
 git clone https://github.com/Galvnyz/M365-Assess.git
 cd M365-Assess
 Install-Module Microsoft.Graph -Scope CurrentUser
-Install-Module ExchangeOnlineManagement -RequiredVersion 3.7.1 -Scope CurrentUser
+Install-Module ExchangeOnlineManagement -Scope CurrentUser
 
 Import-Module ./src/M365-Assess
 Invoke-M365Assessment -TenantId 'contoso.onmicrosoft.com'
@@ -358,7 +347,7 @@ The self-contained HTML report opens in any browser with no dependencies. Click 
 
 ```
 M365-Assess/
-  src/M365-Assess/                  # Publishable module (ships to PSGallery)
+  src/M365-Assess/                  # PowerShell module
     M365-Assess.psd1                # Module manifest
     M365-Assess.psm1                # Module loader
     Invoke-M365Assessment.ps1       # Orchestrator -- main entry point
