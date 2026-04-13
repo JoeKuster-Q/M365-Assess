@@ -62,12 +62,20 @@ function Connect-RequiredService {
 
             # Suppress noisy output during connection (skip when device code
             # is active — the user needs to see the code and URL).
+            # Use StreamWriter wrapping Stream.Null instead of TextWriter.Null.
+            # The ExchangeOnlineManagement module's .NET internals expect
+            # Console.Out to be a StreamWriter; TextWriter.Null (a NullTextWriter)
+            # causes a NullReferenceException when the module casts it.
             $suppressOutput = -not $UseDeviceCode
             $prevConsoleOut = [Console]::Out
             $prevConsoleError = [Console]::Error
             if ($suppressOutput) {
-                [Console]::SetOut([System.IO.TextWriter]::Null)
-                [Console]::SetError([System.IO.TextWriter]::Null)
+                $nullOut = [System.IO.StreamWriter]::new([System.IO.Stream]::Null)
+                $nullOut.AutoFlush = $true
+                $nullErr = [System.IO.StreamWriter]::new([System.IO.Stream]::Null)
+                $nullErr.AutoFlush = $true
+                [Console]::SetOut($nullOut)
+                [Console]::SetError($nullErr)
             }
             try {
                 if ($suppressOutput) {
@@ -81,6 +89,8 @@ function Connect-RequiredService {
                 if ($suppressOutput) {
                     [Console]::SetOut($prevConsoleOut)
                     [Console]::SetError($prevConsoleError)
+                    $nullOut.Dispose()
+                    $nullErr.Dispose()
                 }
             }
 
