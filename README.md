@@ -379,8 +379,11 @@ M365-Assess/
 | [HTML Report](REPORT.md) | Report features, custom branding, `-NoBranding`, standalone generation |
 | [Compliance](COMPLIANCE.md) | 15 frameworks, XLSX export, CheckId system, control registry |
 | [Compatibility](docs/COMPATIBILITY.md) | Module versions, dependency matrix, known incompatibilities |
-| [Troubleshooting](docs/TROUBLESHOOTING.md) | Common errors, module conflicts, permission issues |
+| [Troubleshooting](docs/TROUBLESHOOTING.md) | Common errors, module conflicts, permission issues, connection failures |
 | [CheckId Guide](docs/CheckId-Guide.md) | CheckId naming convention and mapping reference |
+| [Requirements](docs/REQUIREMENTS.md) | Functional requirements and feature specifications |
+| [User Stories](docs/USER-STORIES.md) | Personas and usage scenarios |
+| [Roadmap](docs/ROADMAP.md) | Future enhancements, feature requests, and project vision |
 | [Changelog](CHANGELOG.md) | Release history and version notes |
 | [Security](SECURITY.md) | Vulnerability reporting and security policy |
 

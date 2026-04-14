@@ -106,10 +106,30 @@ $moduleMap = @{
 $requiredModule = $moduleMap[$Service]
 
 # Check that the required module is available
-if (-not (Get-Module -Name $requiredModule -ListAvailable)) {
+$installedModule = Get-Module -Name $requiredModule -ListAvailable | Select-Object -First 1
+if (-not $installedModule) {
     Write-Error "Required module '$requiredModule' is not installed. Run: Install-Module -Name $requiredModule -Scope CurrentUser"
     return
 }
+
+# ------------------------------------------------------------------
+# Verbose diagnostic context — always logged so callers (and the
+# assessment log) capture the full environment state on failures.
+# ------------------------------------------------------------------
+Write-Verbose "--- Connect-Service diagnostics for $Service ---"
+Write-Verbose "  Module        : $requiredModule v$($installedModule.Version)"
+Write-Verbose "  PowerShell    : $($PSVersionTable.PSVersion)"
+Write-Verbose "  OS            : $([System.Runtime.InteropServices.RuntimeInformation]::OSDescription)"
+Write-Verbose "  Environment   : $M365Environment"
+Write-Verbose "  TenantId      : $(if ($TenantId) { $TenantId } else { '(not specified)' })"
+Write-Verbose "  Auth method   : $(
+    if ($ManagedIdentity) { 'ManagedIdentity' }
+    elseif ($ClientId -and $CertificateThumbprint) { 'Certificate' }
+    elseif ($ClientId -and $ClientSecret) { 'ClientSecret' }
+    elseif ($UseDeviceCode) { 'DeviceCode' }
+    elseif ($UserPrincipalName) { "Interactive (UPN: $UserPrincipalName)" }
+    else { 'Interactive (browser)' }
+)"
 
 try {
     # ------------------------------------------------------------------
@@ -175,7 +195,7 @@ try {
             }
 
             Connect-MgGraph @connectParams
-            Write-Verbose "Connected to Microsoft Graph ($M365Environment)"
+            Write-Verbose "Connected to Microsoft Graph ($M365Environment) — module $requiredModule v$($installedModule.Version)"
         }
 
         'ExchangeOnline' {
@@ -206,7 +226,7 @@ try {
             }
 
             Connect-ExchangeOnline @connectParams
-            Write-Verbose "Connected to Exchange Online ($M365Environment)"
+            Write-Verbose "Connected to Exchange Online ($M365Environment) — module $requiredModule v$($installedModule.Version)"
         }
 
         'Purview' {
@@ -237,7 +257,7 @@ try {
             }
 
             Connect-IPPSSession @connectParams
-            Write-Verbose "Connected to Purview (Security & Compliance) ($M365Environment)"
+            Write-Verbose "Connected to Purview (Security & Compliance) ($M365Environment) — module $requiredModule v$($installedModule.Version)"
         }
 
         'PowerBI' {
@@ -259,10 +279,17 @@ try {
             }
 
             Connect-PowerBIServiceAccount @connectParams -WarningAction SilentlyContinue
-            Write-Verbose "Connected to Power BI ($M365Environment)"
+            Write-Verbose "Connected to Power BI ($M365Environment) — module $requiredModule v$($installedModule.Version)"
         }
     }
 }
 catch {
+    Write-Verbose "--- Connection failure details for $Service ---"
+    Write-Verbose "  Exception type: $($_.Exception.GetType().FullName)"
+    Write-Verbose "  Message       : $($_.Exception.Message)"
+    if ($_.Exception.InnerException) {
+        Write-Verbose "  Inner exception: $($_.Exception.InnerException.GetType().FullName): $($_.Exception.InnerException.Message)"
+    }
+    Write-Verbose "  Stack trace   : $($_.ScriptStackTrace)"
     Write-Error "Failed to connect to $Service`: $_"
 }
