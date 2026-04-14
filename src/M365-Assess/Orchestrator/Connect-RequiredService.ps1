@@ -63,40 +63,19 @@ function Connect-RequiredService {
             # Suppress noisy output during connection (skip when device code
             # is active — the user needs to see the code and URL).
             #
-            # Console.Out/Error redirection is skipped for ExchangeOnline and
-            # Purview because Console.SetOut() wraps writers in SyncTextWriter.
-            # The ExchangeOnlineManagement module's .NET internals cast
-            # Console.Out to StreamWriter; the SyncTextWriter wrapper causes
-            # that cast to return null, producing a NullReferenceException.
-            # PowerShell stream redirection (2>$null 6>$null) still suppresses
-            # most connection noise for those services.
-            $suppressStreams = -not $UseDeviceCode
-            $suppressConsole = $suppressStreams -and $svc -notin @('ExchangeOnline', 'Purview')
-            if ($suppressConsole) {
-                $prevConsoleOut = [Console]::Out
-                $prevConsoleError = [Console]::Error
-                $nullOut = [System.IO.StreamWriter]::new([System.IO.Stream]::Null)
-                $nullOut.AutoFlush = $true
-                $nullErr = [System.IO.StreamWriter]::new([System.IO.Stream]::Null)
-                $nullErr.AutoFlush = $true
-                [Console]::SetOut($nullOut)
-                [Console]::SetError($nullErr)
+            # Only PowerShell stream redirection is used here.
+            # Console.SetOut() must NOT be called because it permanently
+            # sets the internal s_isOutTextWriterRedirected flag, causing
+            # Console.IsOutputRedirected to return true for the rest of
+            # the process.  ExchangeOnlineManagement's .NET internals
+            # check this flag and enter a code path that produces a
+            # NullReferenceException during Connect-ExchangeOnline /
+            # Connect-IPPSSession.
+            if (-not $UseDeviceCode) {
+                & $connectServicePath @connectParams 2>$null 6>$null
             }
-            try {
-                if ($suppressStreams) {
-                    & $connectServicePath @connectParams 2>$null 6>$null
-                }
-                else {
-                    & $connectServicePath @connectParams
-                }
-            }
-            finally {
-                if ($suppressConsole) {
-                    [Console]::SetOut($prevConsoleOut)
-                    [Console]::SetError($prevConsoleError)
-                    $nullOut.Dispose()
-                    $nullErr.Dispose()
-                }
+            else {
+                & $connectServicePath @connectParams
             }
 
             $connectedServices.Add($svc) | Out-Null
